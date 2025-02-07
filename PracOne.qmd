@@ -50,8 +50,9 @@ b <- f(cars$speed,cars$dist)
 b0 = round(sum$coefficients[1],6)
 b1 = round(sum$coefficients[2],6)
 
-###comparing if the beta calculated by matrix and lm are same
+###comparing if the beta0 calculated by matrix and lm are same
 b0 == b$beta0
+###comparing if the beta1 calculated by matrix and lm are same
 b1 == b$beta1
 
 ```
