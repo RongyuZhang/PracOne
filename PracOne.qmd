@@ -1,0 +1,51 @@
+---
+title: "PracOne"
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+```{r}
+airquality[!complete.cases(airquality),]
+```
+
+```{r}
+teC = na.omit(airquality$Temp)
+temp = list(mean=mean(teC),sd=sd(teC),min=min(teC),max=max(teC))
+
+ozC = na.omit(airquality$Ozone)
+ozone = list(mean=mean(ozC),sd=sd(ozC),min=min(ozC),max=max(ozC))
+
+cbind(temp,ozone)
+
+```
+
+```{r}
+f <- function(x,y){
+  A = matrix(1,nrow = 50, ncol=1)
+  x1 = cbind(A,matrix(x,ncol=1))
+  xT = t(x1)
+  y1 = matrix(y,ncol=1)
+  
+  beta = solve(xT%*%x1)%*%(xT%*%y1)
+  return(list("coefficients"=beta[1,1], "std error"=beta[2,1]))
+}
+
+f(cars$speed,cars$dist)
+```
+
+```{r}
+sum = lm(cars$dist~cars$speed)
+summary(sum)
+
+
+b <- f(cars$speed,cars$dist)
+
+b0 = sum$coefficients[1]
+b1 = sum$coefficients[2]
+
+b0 == b$coefficients
+b1 == b$`std error`
+
+```
