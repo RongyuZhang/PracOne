@@ -7,14 +7,17 @@ title: "PracOne"
 Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
 
 ```{r}
+## Find all rows in dataset "airquality" that have missing values
 airquality[!complete.cases(airquality),]
 ```
 
 ```{r}
+##Displays the mean, sd, min, max for each of temperature and ozone level
+### removes the missing values
 teC = na.omit(airquality$Temp)
-temp = list(mean=mean(teC),sd=sd(teC),min=min(teC),max=max(teC))
-
 ozC = na.omit(airquality$Ozone)
+###list the calculated values
+temp = list(mean=mean(teC),sd=sd(teC),min=min(teC),max=max(teC))
 ozone = list(mean=mean(ozC),sd=sd(ozC),min=min(ozC),max=max(ozC))
 
 cbind(temp,ozone)
@@ -22,30 +25,33 @@ cbind(temp,ozone)
 ```
 
 ```{r}
+##Calculating the beta coefficients and std error
 f <- function(x,y){
   A = matrix(1,nrow = 50, ncol=1)
   x1 = cbind(A,matrix(x,ncol=1))
   xT = t(x1)
   y1 = matrix(y,ncol=1)
   
-  beta = solve(xT%*%x1)%*%(xT%*%y1)
-  return(list("coefficients"=beta[1,1], "std error"=beta[2,1]))
+  beta = round(solve(xT%*%x1)%*%(xT%*%y1),6)
+  return(list("beta0"=beta[1,1], "beta1"=beta[2,1]))
 }
 
 f(cars$speed,cars$dist)
 ```
 
 ```{r}
+##Finding the beta estimates when fitting the linear regression
 sum = lm(cars$dist~cars$speed)
 summary(sum)
 
 
 b <- f(cars$speed,cars$dist)
 
-b0 = sum$coefficients[1]
-b1 = sum$coefficients[2]
+b0 = round(sum$coefficients[1],6)
+b1 = round(sum$coefficients[2],6)
 
-b0 == b$coefficients
-b1 == b$`std error`
+###comparing if the beta calculated by matrix and lm are same
+b0 == b$beta0
+b1 == b$beta1
 
 ```
