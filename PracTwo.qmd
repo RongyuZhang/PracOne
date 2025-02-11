@@ -22,7 +22,7 @@ for( i in 1:100 ){
 #2.
 
 customLowess <- function(x, y, f){
-  if (f<0||f>1){
+  if (f>0||f<1){
     n = length(x)
     k = f*n 
     w <- NULL ##weight for neighbour
@@ -69,12 +69,4 @@ plot(x, y, main = "Custom LOWESS Smoothing", xlab = "X", ylab = "Y", pch = 16, c
 
 plot(x, y, main = "LOWESS Smoothing", xlab = "X", ylab = "Y", pch = 16, col = "gray")
 
-```
-
-```{r}
-#avg_arrival_delay <- flights %>%
-  left_join(airlines, by = c("carrier" = "carrier")) %>%
-  filter(paste(origin, dest) %in% paste(routes_multiple_airlines$origin, routes_multiple_airlines$dest)) %>%
-  group_by(origin, dest, carrier) %>%
-  summarise(avg_arr_delay = mean(arr_delay, na.rm = TRUE), .groups = "drop") 
 ```
