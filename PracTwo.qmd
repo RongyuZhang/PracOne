@@ -1,0 +1,80 @@
+---
+title: "PracTwo"
+format: html
+---
+
+```{r}
+#1.
+## Set seed
+set.seed(1)
+x = seq(1,100)
+e = rnorm(100, 0, 0.2)
+y <- NULL
+
+for( i in 1:100 ){
+  y[i] = sin(x[i]/10)+e[i]
+  i = i+1
+}
+
+```
+
+```{r}
+#2.
+
+customLowess <- function(x, y, f){
+  if (f<0||f>1){
+    n = length(x)
+    k = f*n 
+    w <- NULL ##weight for neighbour
+    smoothed_y <- NULL  ##smoothed value for xi
+    
+    ## repeat for each xi
+    for (i in 1:n){
+      
+      distance = abs((x[i]-x)) 
+      ordered_ind = order(distance) ## index of distance, ordered in ascending order of value of distance
+      neigbours_index = ordered_ind[1:round(k)] ## the index for the k number of closest neighbours
+      
+      dis_max = max(distance[neigbours_index])
+      
+      w = diag((1-((distance[neigbours_index])/dis_max)^3)^3)
+      
+      X = cbind(1, x[neigbours_index])
+      
+      beta = solve(t(X)%*%w%*%X)%*%t(X)%*%w%*%y[neigbours_index]
+      
+      smoothed_y[i] = beta[1] + beta[2]*x[i]
+      
+    }
+    
+    return(smoothed_y)
+  }
+  else{
+    stop("span of smoothing should follow: 0 < f < 1")
+  }
+}
+
+
+```
+
+```{r}
+#3.
+##using the customLowess
+smoothed_custom <- customLowess(x, y, f = 0.5)  
+
+##using the built-in Lowess
+smoothed_builtin <- lowess(x, y, f = 0.5)
+
+plot(x, y, main = "Custom LOWESS Smoothing", xlab = "X", ylab = "Y", pch = 16, col = "gray")
+
+plot(x, y, main = "LOWESS Smoothing", xlab = "X", ylab = "Y", pch = 16, col = "gray")
+
+```
+
+```{r}
+#avg_arrival_delay <- flights %>%
+  left_join(airlines, by = c("carrier" = "carrier")) %>%
+  filter(paste(origin, dest) %in% paste(routes_multiple_airlines$origin, routes_multiple_airlines$dest)) %>%
+  group_by(origin, dest, carrier) %>%
+  summarise(avg_arr_delay = mean(arr_delay, na.rm = TRUE), .groups = "drop") 
+```
